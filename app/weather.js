@@ -5,21 +5,22 @@ import { useEffect, useState } from 'react'
 const forecast = 'https://api.open-meteo.com/v1/forecast?' + new URLSearchParams({
   latitude: '35.205',
   longitude: '129.079',
-  current: 'temperature_2m,weather_code',
+  current: 'temperature_2m,weather_code,is_day',
   daily: 'temperature_2m_min,temperature_2m_max,precipitation_probability_max',
   timezone: 'Asia/Seoul',
   forecast_days: '1',
 })
 
-function condition(code) {
-  if (code === 0) return '맑음'
-  if (code <= 2) return '구름 조금'
-  if (code === 3) return '흐림'
-  if (code === 45 || code === 48) return '안개'
-  if (code >= 95) return '뇌우'
-  if ((code >= 71 && code <= 77) || code === 85 || code === 86) return '눈'
-  if (code >= 51 && code <= 82) return '비'
-  return '정보 없음'
+function condition(code, isDay) {
+  if (!Number.isFinite(code)) return { label: '정보 없음', icon: null }
+  if (code === 0) return { label: '맑음', icon: isDay === 0 ? '🌙' : '☀️' }
+  if (code === 1 || code === 2) return { label: '구름 조금', icon: '⛅' }
+  if (code === 3) return { label: '흐림', icon: '☁️' }
+  if (code === 45 || code === 48) return { label: '안개', icon: '🌫️' }
+  if (code >= 95) return { label: '뇌우', icon: '⛈️' }
+  if ((code >= 71 && code <= 77) || code === 85 || code === 86) return { label: '눈', icon: '🌨️' }
+  if (code >= 51 && code <= 82) return { label: '비', icon: '🌧️' }
+  return { label: '정보 없음', icon: null }
 }
 
 const temperature = value => Number.isFinite(value) ? Math.round(value) + '°C' : '—'
@@ -54,6 +55,8 @@ export default function Weather() {
     }
   }, [attempt])
 
+  const sky = condition(weather?.current.weather_code, weather?.current.is_day)
+
   return (
     <section className="panel weather" aria-labelledby="weather-title">
       <div className="panel-head">
@@ -63,8 +66,11 @@ export default function Weather() {
       {weather ? (
         <div className="weather-details">
           <div className="weather-current">
-            <strong>{temperature(weather.current.temperature_2m)}</strong>
-            <span>{Number.isFinite(weather.current.weather_code) ? condition(weather.current.weather_code) : '정보 없음'}</span>
+            {sky.icon && <span className="weather-icon" aria-hidden="true">{sky.icon}</span>}
+            <div className="weather-reading">
+              <strong>{temperature(weather.current.temperature_2m)}</strong>
+              <span>{sky.label}</span>
+            </div>
           </div>
           <dl className="weather-metrics">
             <div><dt>오늘 최저</dt><dd>{temperature(weather.daily.temperature_2m_min?.[0])}</dd></div>

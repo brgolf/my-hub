@@ -105,3 +105,29 @@ input:checked + span { text-decoration: line-through; color: #735646; }
 }
 .golf-video-copy { display: grid; flex: 1; gap: 4px; }
 .golf-video-copy small { color: #735646; }
+
+.weather {
+  background: linear-gradient(115deg, #fff1dc, #fffaf4 58%);
+}
+.weather-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 66px;
+  width: 66px;
+  height: 66px;
+  border: 1px solid #edcfab;
+  border-radius: 18px;
+  background: #ffead0;
+  font-family: "Segoe UI Emoji", "Apple Color Emoji", sans-serif;
+  font-size: 2.15rem;
+  line-height: 1;
+}
+.weather-reading { display: grid; gap: 7px; }
+.weather-reading span { color: #735646; font-size: .9rem; }
+.weather-metrics > div {
+  padding: 8px 11px;
+  border: 1px solid #eddece;
+  border-radius: 10px;
+  background: #fffaf4;
+}
+.weather-metrics { gap: 8px; }

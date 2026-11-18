@@ -1,5 +1,6 @@
 import { readFile, writeFile } from 'node:fs/promises'
 
+const recommendationCount = 12
 const key = process.env.YOUTUBE_API_KEY
 if (!key) throw new Error('Set the YOUTUBE_API_KEY repository secret before running this workflow.')
 
@@ -8,7 +9,7 @@ const date = new Intl.DateTimeFormat('en-CA', {
   timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit',
 }).format(new Date())
 const previous = JSON.parse(await readFile(output, 'utf8'))
-if (previous.date === date && previous.videos.length === 10) {
+if (previous.date === date && previous.videos.length === recommendationCount) {
   console.log('Today’s recommendations are already available.')
   process.exit(0)
 }
@@ -61,14 +62,14 @@ const candidates = (await Promise.all(batches))
   .sort((a, b) => b.views - a.views || a.id.localeCompare(b.id))
   .slice(0, 50)
 
-if (candidates.length < 10) {
-  throw new Error('Fewer than 10 eligible videos found. The previous list is preserved.')
+if (candidates.length < recommendationCount) {
+  throw new Error('Fewer than ' + recommendationCount + ' eligible videos found. The previous list is preserved.')
 }
 
 // Prefer videos absent from the previous list, then fill any remaining slots by views.
 const previousIds = new Set(previous.videos.map(video => video.id))
 const fresh = candidates.filter(video => !previousIds.has(video.id))
 const repeats = candidates.filter(video => previousIds.has(video.id))
-const videos = [...fresh, ...repeats].slice(0, 10).sort((a, b) => b.views - a.views)
+const videos = [...fresh, ...repeats].slice(0, recommendationCount).sort((a, b) => b.views - a.views)
 await writeFile(output, JSON.stringify({ date, videos }, null, 2) + '\n')
-console.log('Updated 10 golf recommendations for ' + date)
+console.log('Updated ' + videos.length + ' golf recommendations for ' + date)
