@@ -1,0 +1,36 @@
+name: Update golf recommendations
+
+on:
+  schedule:
+    # 07:17 KST (UTC+9)
+    - cron: '17 22 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: golf-recommendations
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - name: Fetch daily recommendations
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: node scripts/update-golf-videos.mjs
+      - name: Publish recommendations to the default branch
+        run: |
+          if git diff --quiet -- app/golf-videos.json; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- app/golf-videos.json
+          git commit -m 'Update daily golf recommendations'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
