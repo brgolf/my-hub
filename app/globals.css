@@ -64,3 +64,13 @@ input:checked + span { text-decoration: line-through; color: #735646; }
   }
   .panel { padding: 17px; }
 }
+
+.weather { grid-column: 1 / -1; }
+.weather-source { text-underline-offset: 3px; }
+.weather-details, .weather-current, .weather-metrics { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 24px; }
+.weather-details { justify-content: space-between; }
+.weather-current { gap: 10px; }
+.weather-current strong { color: #843d25; font-size: 1.85rem; line-height: 1; }
+.weather-metrics { margin: 0; }
+.weather-metrics dt { color: #735646; font-size: .8rem; }
+.weather-metrics dd { margin: 3px 0 0; font-weight: 650; }
