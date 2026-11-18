@@ -148,3 +148,23 @@ input:checked + span { text-decoration: line-through; color: #735646; }
 }
 .hero-home-link:hover { background: #ffe3bd; }
 .hero-home-link:focus-visible { outline-color: #fff2de; }
+
+.header-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0 16px; }
+.visitor-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  color: #735646;
+  background: #fffaf4;
+  border: 1px solid #ead9c8;
+  padding: 7px 11px;
+  border-radius: 9px;
+  font-size: .8rem;
+}
+.visitor-stats { white-space: nowrap; }
+.visitor-stats strong { color: #843d25; }
+@media (max-width: 520px) {
+  .header-content { padding-block: 10px; }
+  .header-content .brand { height: 46px; }
+}

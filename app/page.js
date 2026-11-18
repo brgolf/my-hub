@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Weather from './weather'
 import GolfVideos from './golf-videos'
+import DongnaeVisitors from './dongnae-visitors'
 
 const storageKey = 'my-hub-v1'
 const initial = {
@@ -80,7 +81,10 @@ export default function Home() {
   return (
     <>
       <header className="bar">
-        <div className="shell brand"><span className="mark" aria-hidden="true">✦</span> my-hub</div>
+        <div className="shell header-content">
+          <div className="brand"><span className="mark" aria-hidden="true">✦</span> my-hub</div>
+          <DongnaeVisitors />
+        </div>
       </header>
       <main className="shell">
         <section className="hero" aria-labelledby="welcome">
