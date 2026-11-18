@@ -131,3 +131,20 @@ input:checked + span { text-decoration: line-through; color: #735646; }
   background: #fffaf4;
 }
 .weather-metrics { gap: 8px; }
+
+.hero-home-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  margin-top: 22px;
+  padding: 8px 15px;
+  border-radius: 10px;
+  background: #fff2de;
+  color: #562e1d;
+  font-size: .92rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+.hero-home-link:hover { background: #ffe3bd; }
+.hero-home-link:focus-visible { outline-color: #fff2de; }

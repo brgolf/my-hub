@@ -88,6 +88,10 @@ export default function Home() {
             <p>{date}</p>
             <h1 id="welcome">나의 시작 페이지</h1>
             <p>자주 찾는 곳과 오늘 챙길 일을 한눈에.</p>
+            <a className="hero-home-link" href="https://brgolf.github.io/dongnae/index.html"
+              target="_blank" rel="noopener noreferrer">
+              내 홈페이지 바로가기 <span aria-hidden="true">↗</span>
+            </a>
           </div>
         </section>
         {message && <p role="status">{message}</p>}
