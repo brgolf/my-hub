@@ -82,7 +82,6 @@ export default function Home() {
       </header>
       <main className="shell">
         <section className="hero" aria-labelledby="welcome">
-          <div className="orbit" aria-hidden="true"><i/><i/><i/></div>
           <div className="hero-copy">
             <p>{date}</p>
             <h1 id="welcome">나의 시작 페이지</h1>
