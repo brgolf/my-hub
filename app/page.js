@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Weather from './weather'
+import GolfVideos from './golf-videos'
 
 const storageKey = 'my-hub-v1'
 const initial = {
@@ -92,6 +93,7 @@ export default function Home() {
         {message && <p role="status">{message}</p>}
         <div className="dashboard">
           <Weather />
+          <GolfVideos />
           <section className="panel links" aria-labelledby="links-title">
             <div className="panel-head">
               <h2 id="links-title">즐겨찾기</h2>
