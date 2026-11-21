@@ -27,7 +27,47 @@ async function redis(commands) {
   return results.map(item => item.result)
 }
 
-export async function GET() {
+const blogSources = {
+  tistory: {
+    url: 'https://brgolf.tistory.com/',
+    parse: html => ({
+      today: parseCount(html.match(/class="item-visit">\s*Today\s*:\s*([\d,]+)\s*</i)?.[1]),
+      total: parseCount(html.match(/class="text-total">\s*([\d,]+)\s*</i)?.[1]),
+    }),
+  },
+  naver: {
+    url: 'https://m.blog.naver.com/yhjo0720',
+    parse: html => ({
+      today: parseCount(html.match(/"dayVisitorCount"\s*:\s*(\d+)/)?.[1]),
+      total: parseCount(html.match(/"totalVisitorCount"\s*:\s*(\d+)/)?.[1]),
+    }),
+  },
+}
+
+function parseCount(value) {
+  const count = Number(value?.replaceAll(',', ''))
+  if (!Number.isSafeInteger(count) || count < 0) throw new Error('Visitor count not found')
+  return count
+}
+
+async function getBlogCounts() {
+  const sources = await Promise.all(Object.entries(blogSources).map(async ([id, source]) => {
+    try {
+      const response = await fetch(source.url, {
+        next: { revalidate: 600 },
+        signal: AbortSignal.timeout(5000),
+      })
+      if (!response.ok) throw new Error('Blog unavailable')
+      return [id, source.parse(await response.text())]
+    } catch {
+      return [id, null]
+    }
+  }))
+  return Response.json(Object.fromEntries(sources))
+}
+
+export async function GET(request) {
+  if (new URL(request.url).searchParams.get('blogs') === '1') return getBlogCounts()
   const [dailyKey, totalKey] = visitorKeys()
   try {
     const [today, total] = await redis([['SCARD', dailyKey], ['SCARD', totalKey]])
